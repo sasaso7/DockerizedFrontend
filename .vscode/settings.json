@@ -1,0 +1,49 @@
+{
+  "tailwindCSS.includeLanguages": {
+    "typescript": "javascript",
+    "typescriptreact": "javascript"
+  },
+
+  "css.customData": [".vscode/css_custom_data.json"],
+
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+
+  "editor.formatOnSave": true,
+
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+
+  "prettier.requireConfig": true,
+
+  "eslint.format.enable": true,
+
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  "editor.linkedEditing": true,
+
+  "files.trimTrailingWhitespace": true,
+
+  "[markdown]": {
+    "files.trimTrailingWhitespace": false
+  },
+
+  "javascript.suggest.autoImports": true,
+
+  "typescript.suggest.autoImports": true,
+
+  "javascript.updateImportsOnFileMove.enabled": "prompt",
+
+  "typescript.updateImportsOnFileMove.enabled": "prompt"
+}
