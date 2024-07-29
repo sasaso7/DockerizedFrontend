@@ -14,15 +14,15 @@ api.interceptors.request.use(
   async (config) => {
     if (await isLoggedIn()) {
       if (await isTokenExpired()) {
-        await refreshToken();
-      }
-
-      const token = await loadString("accessToken");
-      if (token) {
-        config.headers["Authorization"] = `Bearer ${token}`;
+        const newToken = await refreshToken();
+        config.headers["Authorization"] = `Bearer ${newToken}`;
+      } else {
+        const token = await loadString("accessToken");
+        if (token) {
+          config.headers["Authorization"] = `Bearer ${token}`;
+        }
       }
     }
-
     return config;
   },
   (error) => {
@@ -37,8 +37,6 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-
-    // Handle 401 errors by refreshing token and retrying
     if (
       error.response &&
       error.response.status === 401 &&
@@ -46,7 +44,8 @@ api.interceptors.response.use(
     ) {
       originalRequest._retry = true;
       try {
-        await refreshToken();
+        const newToken = await refreshToken();
+        originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
         return api(originalRequest);
       } catch (refreshError) {
         // If refresh fails, reject with your custom error format
@@ -122,8 +121,9 @@ const isTokenExpired = async (): Promise<boolean> => {
 };
 
 // Function to check if user is logged in
-const isLoggedIn = async (): Promise<boolean> => {
+export const isLoggedIn = async (): Promise<boolean> => {
   const token = await loadString("accessToken");
+  console.log("Checking if logged in, token exists:", !!token);
   return !!token;
 };
 
@@ -175,7 +175,18 @@ export const register = async (
   }
 };
 
-const refreshToken = async (): Promise<void> => {
+let isRefreshing = false;
+let refreshSubscribers: ((token: string) => void)[] = [];
+
+const refreshToken = async (): Promise<string> => {
+  if (isRefreshing) {
+    return new Promise((resolve) => {
+      refreshSubscribers.push(resolve);
+    });
+  }
+
+  isRefreshing = true;
+
   try {
     const refreshToken = await loadString("refreshToken");
     const response = await api.post<types.LoginResult>("/refresh", {
@@ -188,9 +199,17 @@ const refreshToken = async (): Promise<void> => {
       "tokenExpiry",
       (Date.now() + response.data.expiresIn * 1000).toString()
     );
+
+    refreshSubscribers.forEach(callback => callback(response.data.accessToken));
+    refreshSubscribers = [];
+
+    return response.data.accessToken;
   } catch (error) {
     console.error("Failed to refresh token:", error);
+    refreshSubscribers = [];
     throw error;
+  } finally {
+    isRefreshing = false;
   }
 };
 /* AUTH OPERATIONS END */

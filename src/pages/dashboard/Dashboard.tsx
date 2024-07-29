@@ -1,15 +1,14 @@
-import { Account } from "@/services/api/api.types";
+import { Account as AccountType } from "@/services/api/api.types";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDashboardStore } from "./useDashboardStore";
 import { useAuthStore } from "@/stores/useAuthStore"; // Import useAuthStore
-import CreateAccount from "../account/CreateAccount";
+import Account from "./Account";
 
 const Dashboard: React.FC = () => {
   const { userData, loading, error, refreshUserData } = useDashboardStore();
   const { handleLogout, checkAndRedirectIfNoAccounts } = useAuthStore(); // Get the logout function from useAuthStore
   const navigate = useNavigate();
-  const [showCreateAccount, setShowCreateAccount] = React.useState(false);
 
   useEffect(() => {
     if (userData) {
@@ -17,8 +16,16 @@ const Dashboard: React.FC = () => {
     }
   }, [userData, checkAndRedirectIfNoAccounts]);
 
+  useEffect(() => {
+    console.log("Dashboard mounted");
+  }, []);
+
+  useEffect(() => {
+    console.log("Data changed:", { userData, loading, error });
+  }, [userData, loading, error]);
+
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Loading... DASHBOARD</div>;
   }
 
   if (error) {
@@ -34,22 +41,15 @@ const Dashboard: React.FC = () => {
     return <div>No user data available.</div>;
   }
 
-  const handleAccountClick = (account: Account) => {
-    navigate(`/account/${account.id}`, { state: { account } });
-  };
-
   return (
     <div>
-      <h1>Dashboard</h1>
       <p>Welcome, {userData.email}!</p>
       <p>Your favorite animal: {userData.favoriteAnimal}</p>
       <h2>Your Accounts:</h2>
       {userData.accounts.length > 0 ? (
         <ul>
           {userData.accounts.map((account) => (
-            <li key={account.id} onClick={() => handleAccountClick(account)}>
-              {account.name}
-            </li>
+            <Account account={account}/>
           ))}
         </ul>
       ) : (

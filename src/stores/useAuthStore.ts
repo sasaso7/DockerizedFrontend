@@ -1,34 +1,24 @@
-import { useState, useCallback, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+// src/stores/useAuthStore.ts
+import { useState } from "react";
 import { useRequest } from "ahooks";
-import { login, logout, register } from "@/services/api/api";
-import { Account } from "@/services/api/api.types";
-
-const ACTIVE_ACCOUNT_KEY = "activeAccount";
+import { login, register, logout } from "@/services/api/api";
+import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from "react-router-dom";
 
 export const useAuthStore = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState<string | null>(null);
   const [registerError, setRegisterError] = useState<string | null>(null);
-  const [activeAccount, setActiveAccount] = useState<Account | null>(() => {
-    const savedAccount = localStorage.getItem(ACTIVE_ACCOUNT_KEY);
-    return savedAccount ? JSON.parse(savedAccount) : null;
-  });
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    if (activeAccount) {
-      localStorage.setItem(ACTIVE_ACCOUNT_KEY, JSON.stringify(activeAccount));
-    } else {
-      localStorage.removeItem(ACTIVE_ACCOUNT_KEY);
-    }
-  }, [activeAccount]);
+  const { activeAccount, handleLogout, checkAndRedirectIfNoAccounts } = useAuth();
+  const navigate = useNavigate();
 
   const loginRequest = useRequest(login, {
     manual: true,
-    onSuccess: () => {
+    onSuccess: (userData) => {
       setLoginError(null);
+      checkAndRedirectIfNoAccounts(userData);
       navigate("/dashboard");
     },
     onError: (error) => {
@@ -38,14 +28,13 @@ export const useAuthStore = () => {
 
   const registerRequest = useRequest(register, {
     manual: true,
-    onSuccess: () => {
+    onSuccess: (userData) => {
       setRegisterError(null);
+      checkAndRedirectIfNoAccounts(userData);
       navigate("/dashboard");
     },
     onError: (error) => {
-      setRegisterError(
-        error.message || "Registration failed. Please try again."
-      );
+      setRegisterError(error.message || "Registration failed. Please try again.");
     },
   });
 
@@ -58,32 +47,6 @@ export const useAuthStore = () => {
     setRegisterError(null);
     registerRequest.run({ email, password });
   };
-
-  const handleLogout = () => {
-    logout();
-    setActiveAccount(null);
-    localStorage.removeItem(ACTIVE_ACCOUNT_KEY);
-    navigate("/login");
-  };
-
-  const checkAndRedirectIfNoAccounts = useCallback(
-    (userData: any) => {
-      if (userData && userData.accounts.length === 0) {
-        navigate("/account-management");
-      } else if (userData && userData.accounts.length > 0) {
-        if (
-          !activeAccount ||
-          !userData.accounts.some(
-            (account: { id: string }) => account.id === activeAccount.id
-          )
-        ) {
-          // If no active account or the active account is not in the user's accounts, set the first account as active
-          setActiveAccount(userData.accounts[0]);
-        }
-      }
-    },
-    [navigate, activeAccount, setActiveAccount]
-  );
 
   return {
     email,
@@ -100,7 +63,6 @@ export const useAuthStore = () => {
     registerError,
     setRegisterError,
     activeAccount,
-    setActiveAccount,
     checkAndRedirectIfNoAccounts,
   };
 };

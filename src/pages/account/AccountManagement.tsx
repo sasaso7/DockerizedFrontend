@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "@/stores/useAuthStore";
+import { useAuth } from "@/contexts/AuthContext";
 import { Account } from "@/services/api/api.types";
 import { useDashboardStore } from "../dashboard/useDashboardStore";
 import CreateAccount from "./CreateAccount";
 
 const AccountManagement: React.FC = () => {
   const { userData, refreshUserData } = useDashboardStore();
-  const { setActiveAccount, activeAccount } = useAuthStore();
+  const { setActiveAccount, activeAccount } = useAuth();
   const navigate = useNavigate();
   const [showCreateAccount, setShowCreateAccount] = useState(false);
 
@@ -52,7 +52,6 @@ const AccountManagement: React.FC = () => {
         Create New Account
       </button>
       <button onClick={() => navigate("/dashboard")}>Back to Dashboard</button>
-
       {showCreateAccount && (
         <CreateAccount
           userId={userData.id}

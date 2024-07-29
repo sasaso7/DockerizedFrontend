@@ -10,14 +10,17 @@ export const useDashboardStore = () => {
   const userDataRequest = useRequest(getUser, {
     manual: false,
     onSuccess: (data) => {
+      console.log("User data fetched successfully:", data);
       setUserData(data);
       setError(null);
     },
     onError: (error) => {
+      console.error("Error fetching user data:", error);
       setError(error.message || "Failed to fetch user data. Please try again.");
     },
   });
 
+  console.log("Current state:", { userData, loading: userDataRequest.loading, error });
   const refreshUserData = () => {
     setError(null);
     userDataRequest.run(true);

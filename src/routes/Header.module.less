@@ -1,0 +1,79 @@
+@import '../styles/variables.less';
+
+.header {
+  border-bottom: 1px solid @border-color;
+  padding: 10px 0;
+  background-color: @header-bg-color;
+}
+
+.container {
+  width: 100%;
+  max-width: @max-width;
+  margin: 0 auto;
+  padding: 0 @spacing-md;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.logo {
+  font-size: @font-size-large;
+  font-weight: bold;
+  text-decoration: none;
+  color: @text-color;
+  margin-bottom: @spacing-sm;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.navLink, .logoutButton {
+  margin-right: @spacing-md;
+  margin-top: @spacing-xs;
+  text-decoration: none;
+  color: @text-color;
+  font-size: @font-size-base;
+}
+
+.logoutButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.activeAccount {
+  font-size: @font-size-small;
+  color: @secondary-text-color;
+  margin-right: @spacing-md;
+  margin-top: @spacing-xs;
+}
+
+@media (min-width: @breakpoint-md) {
+  .container {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo {
+    margin-bottom: 0;
+  }
+
+  .nav {
+    flex-wrap: nowrap;
+  }
+
+  .navLink, .logoutButton, .activeAccount {
+    margin-top: 0;
+    margin-right: 0;
+    margin-left: @spacing-md;
+  }
+
+  .activeAccount {
+    margin-left: 0;
+  }
+}
