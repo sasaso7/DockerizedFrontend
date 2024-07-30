@@ -1,9 +1,11 @@
 @import '../styles/variables.less';
 
 .header {
-  border-bottom: 1px solid @border-color;
+  border-bottom: 1px solid @primary-complimentary;
   padding: 10px 0;
-  background-color: @header-bg-color;
+  background: linear-gradient(180deg, @primary-color 0%, @primary-complimentary 100%);
+//   box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.3), inset 0px 2px 1px rgba(255, 255, 255, 0.3), inset 0px -2px 1px rgba(0, 0, 0, 0.4);
+  z-index: 1;
 }
 
 .container {

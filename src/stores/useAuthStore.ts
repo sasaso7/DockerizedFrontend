@@ -16,21 +16,18 @@ export const useAuthStore = () => {
 
   const loginRequest = useRequest(login, {
     manual: true,
-    onSuccess: (userData) => {
+    onSuccess: () => {
       setLoginError(null);
-      checkAndRedirectIfNoAccounts(userData);
       navigate("/dashboard");
     },
     onError: (error) => {
       setLoginError(error.message || "Login failed. Please try again.");
     },
   });
-
   const registerRequest = useRequest(register, {
     manual: true,
-    onSuccess: (userData) => {
+    onSuccess: () => {
       setRegisterError(null);
-      checkAndRedirectIfNoAccounts(userData);
       navigate("/dashboard");
     },
     onError: (error) => {

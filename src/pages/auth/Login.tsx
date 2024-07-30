@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import styles from './Auth.module.less';
 
 import { useAuthStore } from "../../stores/useAuthStore";
 
@@ -21,9 +22,8 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={onSubmit}>
-        <h2>Login</h2>
+    <div className={styles.center}>
+      <form onSubmit={onSubmit} className={styles.formStyle}>
         {loginError && (
           <div style={{ color: "red", marginBottom: "10px" }}>{loginError}</div>
         )}
@@ -36,6 +36,7 @@ export const Login: React.FC = () => {
           }}
           placeholder="Email"
           required
+          className={styles.input}
         />
         <input
           type="password"
@@ -46,8 +47,9 @@ export const Login: React.FC = () => {
           }}
           placeholder="Password"
           required
+          className={styles.input}
         />
-        <button type="submit" disabled={loginLoading}>
+        <button type="submit" disabled={loginLoading} className={styles.button}>
           {loginLoading ? "Logging in..." : "Login"}
         </button>
       </form>

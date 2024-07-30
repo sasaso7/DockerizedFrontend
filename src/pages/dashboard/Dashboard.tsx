@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useDashboardStore } from "./useDashboardStore";
 import { useAuthStore } from "@/stores/useAuthStore"; // Import useAuthStore
 import Account from "./Account";
+import styles from './Dashboard.module.less';
 
 const Dashboard: React.FC = () => {
   const { userData, loading, error, refreshUserData } = useDashboardStore();
@@ -16,13 +17,6 @@ const Dashboard: React.FC = () => {
     }
   }, [userData, checkAndRedirectIfNoAccounts]);
 
-  useEffect(() => {
-    console.log("Dashboard mounted");
-  }, []);
-
-  useEffect(() => {
-    console.log("Data changed:", { userData, loading, error });
-  }, [userData, loading, error]);
 
   if (loading) {
     return <div>Loading... DASHBOARD</div>;
@@ -43,20 +37,17 @@ const Dashboard: React.FC = () => {
 
   return (
     <div>
-      <p>Welcome, {userData.email}!</p>
-      <p>Your favorite animal: {userData.favoriteAnimal}</p>
-      <h2>Your Accounts:</h2>
       {userData.accounts.length > 0 ? (
-        <ul>
+        <div className={styles.flexGrid}>
           {userData.accounts.map((account) => (
-            <Account account={account}/>
+            <Account account={account} key={account.id}/>
           ))}
-        </ul>
+        </div>
       ) : (
         <p>No accounts found.</p>
       )}
-      <button onClick={refreshUserData}>Refresh Data</button>
-      <button onClick={handleLogout}>Logout</button>
+      <button onClick={refreshUserData} className={styles.refreshButton}>Refresh Data</button>
+      <button onClick={handleLogout} className={styles.logoutButton}>Logout</button>
     </div>
   );
 };

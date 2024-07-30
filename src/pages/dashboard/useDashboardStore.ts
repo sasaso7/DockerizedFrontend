@@ -10,7 +10,6 @@ export const useDashboardStore = () => {
   const userDataRequest = useRequest(getUser, {
     manual: false,
     onSuccess: (data) => {
-      console.log("User data fetched successfully:", data);
       setUserData(data);
       setError(null);
     },
@@ -20,7 +19,6 @@ export const useDashboardStore = () => {
     },
   });
 
-  console.log("Current state:", { userData, loading: userDataRequest.loading, error });
   const refreshUserData = () => {
     setError(null);
     userDataRequest.run(true);

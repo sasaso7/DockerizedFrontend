@@ -1,15 +1,16 @@
-@primary-color: #1890ff;
+@primary-color: #a93217;
+@primary-complimentary: #d62c2c8e;
 @secondary-color: #52c41a;
-@text-color: #333333;
+@text-color: #ffffff;
 @secondary-text-color: #666666;
 @background-color: #f0f2f5;
-@border-color: #d9d9d9;
-@header-bg-color: #ffffff;
+@border-color: #d9d9d936;
+@header-bg-color: @primary-complimentary;
 
 // Typography
 @font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
-@font-size-base: 14px;
-@font-size-large: 16px;
+@font-size-base: 16px;
+@font-size-large: 20px;
 @font-size-small: 12px;
 
 // Layout
@@ -52,3 +53,70 @@
 // Shadows
 @box-shadow-base: 0 2px 8px rgba(0, 0, 0, 0.15);
 @box-shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.2);
+
+//Button
+.button-style(@bg-color: @primary-color, @text-color: @text-color, @hover-bg-color: darken( @primary-color, 10%)) {
+    font-size: @font-size-base;
+    color: @text-color;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: @background-color 0.3s ease;
+    background: linear-gradient(180deg, @primary-color 0%, @primary-complimentary 100%);
+    box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.3), inset 0px 2px 1px rgba(255, 255, 255, 0.3), inset 0px -2px 1px rgba(0, 0, 0, 0.4);
+    &:hover {
+      background-color: @hover-bg-color;
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    }
+  }
+
+//Center
+.center-mixin(@type: both) {
+    display: flex;
+
+    & when (@type = both) {
+      justify-content: center;
+      align-items: center;
+    }
+
+    & when (@type = horizontal) {
+      justify-content: center;
+    }
+
+    & when (@type = vertical) {
+      align-items: center;
+    }
+  }
+
+//Input Field
+.input-style(
+  @bg-color: white,
+  @text-color: @secondary-text-color,
+  @border-color: @border-color,
+  @focus-color: @primary-color
+) {
+  font-family: @font-family;
+  font-size: @font-size-base;
+  color: @text-color;
+  background-color: @bg-color;
+  border: 1px solid @border-color;
+  border-radius: @border-radius-base;
+  padding: @spacing-sm @spacing-md;
+  transition: border-color @transition-duration @transition-timing-function,
+              box-shadow @transition-duration @transition-timing-function;
+
+  &:focus {
+    outline: none;
+    border-color: @focus-color;
+    box-shadow: 0 0 0 2px fade(@focus-color, 20%);
+  }
+
+  &::placeholder {
+    color: lighten(@text-color, 30%);
+  }
+}

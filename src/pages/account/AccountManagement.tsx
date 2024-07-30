@@ -4,6 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Account } from "@/services/api/api.types";
 import { useDashboardStore } from "../dashboard/useDashboardStore";
 import CreateAccount from "./CreateAccount";
+import styles from './AccountManagement.module.less';
 
 const AccountManagement: React.FC = () => {
   const { userData, refreshUserData } = useDashboardStore();
@@ -26,8 +27,6 @@ const AccountManagement: React.FC = () => {
 
   return (
     <div>
-      <h1>Account Management</h1>
-      <h2>Your Accounts:</h2>
       {userData.accounts.length > 0 ? (
         <ul>
           {userData.accounts.map((account) => (
@@ -48,10 +47,10 @@ const AccountManagement: React.FC = () => {
       ) : (
         <p>No accounts found.</p>
       )}
-      <button onClick={() => setShowCreateAccount(true)}>
+      <button onClick={() => setShowCreateAccount(true)} className={styles.button}>
         Create New Account
       </button>
-      <button onClick={() => navigate("/dashboard")}>Back to Dashboard</button>
+      <button onClick={() => navigate("/dashboard")} className={styles.button}>Back to Dashboard</button>
       {showCreateAccount && (
         <CreateAccount
           userId={userData.id}

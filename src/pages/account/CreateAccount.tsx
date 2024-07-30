@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useRequest } from "ahooks";
 import { createAccount } from "@/services/api/api";
+import styles from './AccountManagement.module.less';
 
 interface CreateAccountProps {
   userId: string;
@@ -38,10 +39,10 @@ const CreateAccount: React.FC<CreateAccountProps> = ({
           placeholder="Account Name"
           required
         />
-        <button type="submit" disabled={loading}>
+        <button type="submit" disabled={loading} className={styles.button}>
           {loading ? "Creating..." : "Create Account"}
         </button>
-        <button type="button" onClick={onCancel} disabled={loading}>
+        <button type="button" onClick={onCancel} disabled={loading} className={styles.button}>
           Cancel
         </button>
       </form>

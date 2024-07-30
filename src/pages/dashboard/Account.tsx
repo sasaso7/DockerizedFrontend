@@ -48,20 +48,17 @@ const Account: React.FC<AccountProps> = ({ account }) => {
 
   return (
     <div className="Account">
-      <p>Account Name: {account.name}</p>
-      <p>Account ID: {account.id}</p>
-
-      <h2>Account Activities:</h2>
+      <p>{account.name}</p>
       {activities.length > 0 ? (
-        <ul>
+        <div>
           {activities.map((activity) => (
-            <li key={activity.id}>
+            <div key={activity.id}>
               <h3>{activity.name}</h3>
               <p>Description: {activity.description}</p>
               <p>Created: {new Date(activity.createDate).toLocaleString()}</p>
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       ) : (
         <p>No activities found for this account.</p>
       )}

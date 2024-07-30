@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuthStore } from "../../stores/useAuthStore";
+import styles from './Auth.module.less';
 
 export const Register: React.FC = () => {
   const {
@@ -20,9 +21,8 @@ export const Register: React.FC = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={onSubmit}>
-        <h2>Register</h2>
+    <div className={styles.center}>
+      <form onSubmit={onSubmit} className={styles.formStyle}>
         {registerError && (
           <div style={{ color: "red", marginBottom: "10px" }}>
             {registerError}
@@ -37,6 +37,7 @@ export const Register: React.FC = () => {
           }}
           placeholder="Email"
           required
+          className={styles.input}
         />
         <input
           type="password"
@@ -47,8 +48,9 @@ export const Register: React.FC = () => {
           }}
           placeholder="Password"
           required
+          className={styles.input}
         />
-        <button type="submit" disabled={registerLoading}>
+        <button type="submit" disabled={registerLoading} className={styles.button}>
           {registerLoading ? "Registering..." : "Register"}
         </button>
       </form>
