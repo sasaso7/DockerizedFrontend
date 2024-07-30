@@ -35,7 +35,7 @@ export const Router = () => {
           path="/"
           element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login />}
         />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<ProtectedDashboard />} />
         <Route path="/account-management" element={<ProtectedAccountManagement />} />

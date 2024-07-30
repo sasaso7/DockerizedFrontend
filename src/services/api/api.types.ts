@@ -7,6 +7,12 @@ export type LoginResult = {
   refreshToken: string;
   expiresIn: number;
 };
+export type RefreshResult = {
+  accessToken: string;
+  refreshToken: string;
+  expiresIn: number;
+  tokenType: string;
+};
 export type Register = {
   email: string;
   password: string;

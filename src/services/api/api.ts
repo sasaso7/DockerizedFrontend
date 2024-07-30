@@ -10,12 +10,41 @@ export const api: AxiosInstance = axios.create({
 });
 
 // Request interceptor
+let isRefreshing = false;
+let refreshSubscribers: ((token: string) => void)[] = [];
+
 api.interceptors.request.use(
   async (config) => {
     if (await isLoggedIn()) {
+      // Don't intercept the refresh token request
+      if (config.url === "/refresh") {
+        return config;
+      }
+
       if (await isTokenExpired()) {
-        const newToken = await refreshToken();
-        config.headers["Authorization"] = `Bearer ${newToken}`;
+        if (!isRefreshing) {
+          isRefreshing = true;
+          try {
+            console.log("Token expired, refreshing...");
+            const newToken = await refreshToken();
+            isRefreshing = false;
+            refreshSubscribers.forEach(callback => callback(newToken));
+            refreshSubscribers = [];
+            config.headers["Authorization"] = `Bearer ${newToken}`;
+          } catch (error) {
+            isRefreshing = false;
+            refreshSubscribers = [];
+            return Promise.reject(error);
+          }
+        } else {
+          // Wait for the token to be refreshed
+          return new Promise((resolve) => {
+            refreshSubscribers.push((token) => {
+              config.headers["Authorization"] = `Bearer ${token}`;
+              resolve(config);
+            });
+          });
+        }
       } else {
         const token = await loadString("accessToken");
         if (token) {
@@ -175,23 +204,20 @@ export const register = async (
   }
 };
 
-let isRefreshing = false;
-let refreshSubscribers: ((token: string) => void)[] = [];
 
 const refreshToken = async (): Promise<string> => {
-  if (isRefreshing) {
-    return new Promise((resolve) => {
-      refreshSubscribers.push(resolve);
-    });
-  }
-
-  isRefreshing = true;
-
   try {
+    console.log("Refreshing token");
     const refreshToken = await loadString("refreshToken");
-    const response = await api.post<types.LoginResult>("/refresh", {
-      refreshToken,
-    });
+    if (!refreshToken) {
+      throw new Error("No refresh token available");
+    }
+
+    const response = await api.post<types.LoginResult>("/refresh", { refreshToken });
+
+    if (!response || !response.data) {
+      throw new Error("Invalid response from server");
+    }
 
     await saveString("accessToken", response.data.accessToken);
     await saveString("refreshToken", response.data.refreshToken);
@@ -200,16 +226,11 @@ const refreshToken = async (): Promise<string> => {
       (Date.now() + response.data.expiresIn * 1000).toString()
     );
 
-    refreshSubscribers.forEach(callback => callback(response.data.accessToken));
-    refreshSubscribers = [];
-
+    console.log("Token refreshed successfully");
     return response.data.accessToken;
   } catch (error) {
     console.error("Failed to refresh token:", error);
-    refreshSubscribers = [];
     throw error;
-  } finally {
-    isRefreshing = false;
   }
 };
 /* AUTH OPERATIONS END */
