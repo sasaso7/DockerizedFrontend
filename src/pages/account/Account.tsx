@@ -3,12 +3,16 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { getAccountActivites } from "@/services/api/api";
+import styles from "./AccountManagement.module.less";
+import { CircleCheck } from "lucide-react";
 
 interface AccountProps {
   account: AccountType;
+  selected: boolean;
+  onClick?: () => void;
 }
 
-const Account: React.FC<AccountProps> = ({ account }) => {
+const Account: React.FC<AccountProps> = ({ account, onClick, selected }) => {
   const { activeAccount } = useAuthStore();
   const [activities, setActivities] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(false);
@@ -47,22 +51,27 @@ const Account: React.FC<AccountProps> = ({ account }) => {
   }
 
   return (
-    <div className="Account">
+    <div className={styles.Account} id={selected ? styles.chosen : undefined} onClick={() => onClick ? onClick() : null}>
+      {selected ? <div className={styles.tick}><CircleCheck /></div> : null}
       <p>{account.name}</p>
       {activities.length > 0 ? (
         <div>
-          {activities.map((activity) => (
-            <div key={activity.id}>
-              <h3>{activity.name}</h3>
-              <p>Description: {activity.description}</p>
-              <p>Created: {new Date(activity.createDate).toLocaleString()}</p>
-            </div>
-          ))}
+          {activities
+            .sort((a, b) => new Date(b.createDate).getTime() - new Date(a.createDate).getTime())
+            .slice(0, 3)
+            .map((activity) => (
+              <div key={activity.id}>
+                <h3>{activity.name}</h3>
+                <p>Description: {activity.description}</p>
+                <p>Created: {new Date(activity.createDate).toLocaleString()}</p>
+              </div>
+            ))}
         </div>
       ) : (
         <p>No activities found for this account.</p>
-      )}
-    </div>
+      )
+      }
+    </div >
   );
 };
 

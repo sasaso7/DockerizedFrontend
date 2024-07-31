@@ -333,7 +333,7 @@ export const getAccountActivites = async (
       accountId: activity.accountId,
       name: activity.name,
       description: activity.description,
-      createDate: activity.createDate,
+      createDate: new Date(activity.created),
     }));
 
     await cacheData(`activities_${accountId}`, arrayToReturn);
@@ -357,3 +357,16 @@ export const createActivity = async (
   }
 };
 /* ACTIVITY OPERATIONS END */
+
+/* EXTERNAL API OPERATIONS START */
+export const getKanyeQuoteAndCreateActivity = async (
+  params: types.KanyeQuoteRequest
+): Promise<string> => {
+  try {
+    const response = await api.post<string>("/ExternalAPI/quote", params);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching Kanye quote and creating activity:", error);
+    throw error;
+  }
+};

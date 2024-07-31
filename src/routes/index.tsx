@@ -7,6 +7,7 @@ import AccountManagement from "@/pages/account/AccountManagement";
 import Layout from "./Layout";
 import { withAuth } from "@/services/withAuth";
 import { isLoggedIn } from "@/services/api/api";
+import KanyeQuotePage from "@/pages/action-pages/KanyeQuotePage";
 
 const ProtectedDashboard = withAuth(Dashboard);
 const ProtectedAccountManagement = withAuth(AccountManagement);
@@ -39,6 +40,7 @@ export const Router = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<ProtectedDashboard />} />
         <Route path="/account-management" element={<ProtectedAccountManagement />} />
+        <Route path="/kanye-quote" element={<KanyeQuotePage />} />
       </Routes>
     </Layout>
   );

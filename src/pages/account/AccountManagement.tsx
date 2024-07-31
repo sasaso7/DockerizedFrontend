@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { Account } from "@/services/api/api.types";
+import { Account as AccountType } from "@/services/api/api.types";
 import { useDashboardStore } from "../dashboard/useDashboardStore";
 import CreateAccount from "./CreateAccount";
 import styles from './AccountManagement.module.less';
+import Account from "./Account";
 
 const AccountManagement: React.FC = () => {
   const { userData, refreshUserData } = useDashboardStore();
@@ -16,7 +17,7 @@ const AccountManagement: React.FC = () => {
     return <div>Loading user data...</div>;
   }
 
-  const handleAccountClick = (account: Account) => {
+  const handleAccountClick = (account: AccountType) => {
     setActiveAccount(account);
   };
 
@@ -28,22 +29,11 @@ const AccountManagement: React.FC = () => {
   return (
     <div>
       {userData.accounts.length > 0 ? (
-        <ul>
+        <div className={styles.flexGrid}>
           {userData.accounts.map((account) => (
-            <li
-              key={account.id}
-              onClick={() => handleAccountClick(account)}
-              style={{
-                fontWeight:
-                  account.id === activeAccount?.id ? "bold" : "normal",
-                cursor: "pointer",
-              }}
-            >
-              {account.name}{" "}
-              {account.id === activeAccount?.id ? "(Active)" : ""}
-            </li>
+            <Account account={account} onClick={() => handleAccountClick(account)} key={account.id} selected={account.id == activeAccount?.id} />
           ))}
-        </ul>
+        </div>
       ) : (
         <p>No accounts found.</p>
       )}

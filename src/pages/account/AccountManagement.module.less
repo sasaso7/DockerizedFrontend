@@ -3,3 +3,46 @@
 .button{
     .button-style
 }
+
+.flexGrid{
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    box-sizing: border-box;
+    padding: @spacing-lg;
+}
+
+.Account{
+    position: relative;
+    box-sizing: border-box;
+    width: 25%;
+    padding: @spacing-md;
+    border-radius: 8px;
+    background: linear-gradient(180deg, @primary-color 0%, @primary-complimentary 100%);
+    box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.3), inset 0px 2px 1px rgba(255, 255, 255, 0.3), inset 0px -2px 1px rgba(0, 0, 0, 0.4);
+    border: 1px solid @primary-complimentary;
+
+    cursor: pointer;
+
+    &:hover {
+        background-color: lighten(@primary-color, 10%);
+      }
+}
+
+#chosen{
+    outline: 1px solid @selected-color;
+}
+
+.tick{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: @font-size-large * 2;
+    height: @font-size-large * 2;
+
+    svg{
+        width: 100%;
+        height: 100%;
+        color: @selected-color;
+    }
+}

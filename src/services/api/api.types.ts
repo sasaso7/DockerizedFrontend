@@ -76,7 +76,7 @@ export type FullActivityResponse = {
   account: Account;
   name: string;
   description: string;
-  createDate: Date;
+  created: Date;
 };
 
 export type Activity = {
@@ -92,3 +92,7 @@ export type CreateActivity = {
   name: string;
   description: string;
 };
+
+export interface KanyeQuoteRequest {
+  accountId: string;
+}

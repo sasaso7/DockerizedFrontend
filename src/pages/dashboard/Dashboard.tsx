@@ -1,9 +1,9 @@
 import { Account as AccountType } from "@/services/api/api.types";
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDashboardStore } from "./useDashboardStore";
 import { useAuthStore } from "@/stores/useAuthStore"; // Import useAuthStore
-import Account from "./Account";
+import Account from "../account/Account";
 import styles from './Dashboard.module.less';
 
 const Dashboard: React.FC = () => {
@@ -37,17 +37,8 @@ const Dashboard: React.FC = () => {
 
   return (
     <div>
-      {userData.accounts.length > 0 ? (
-        <div className={styles.flexGrid}>
-          {userData.accounts.map((account) => (
-            <Account account={account} key={account.id}/>
-          ))}
-        </div>
-      ) : (
-        <p>No accounts found.</p>
-      )}
-      <button onClick={refreshUserData} className={styles.refreshButton}>Refresh Data</button>
-      <button onClick={handleLogout} className={styles.logoutButton}>Logout</button>
+      <button onClick={refreshUserData} className={styles.button}>Refresh Data</button>
+      <Link to="/kanye-quote" className={styles.button}>Quote Generator</Link>
     </div>
   );
 };
