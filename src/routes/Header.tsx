@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import styles from './Header.module.less';
-import { House } from 'lucide-react';
-import { isLoggedIn } from '@/services/api/api';
+import { FishSymbol, House } from 'lucide-react';
 
 const Header: React.FC = () => {
   const { activeAccount, handleLogout, isLoggedIn } = useAuth();
@@ -11,7 +10,7 @@ const Header: React.FC = () => {
   return (
     <header className={styles.header}>
       <div className={styles.container}>
-        <NavLink to="/" className={styles.logo}><House /></NavLink>
+        <NavLink to="/" className={styles.logo}>{isLoggedIn ? <House /> : <div className={styles.fishLogo}><FishSymbol /></div>}</NavLink>
         <nav className={styles.nav}>
           {isLoggedIn ? (
             <>
