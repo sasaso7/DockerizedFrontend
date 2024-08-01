@@ -38,8 +38,8 @@ const NavigationDiv = (props: NavigationDivProps) => {
         >
             <img src={props.image} alt="Image" />
             <div className={`${styles.hoverText} ${isHovered ? styles.show : ''}`}>
-                <div className={styles.text}>{props.hoverText}</div>
                 <div className={styles.arrow}><ArrowRight /></div>
+                <div className={styles.text}>{props.hoverText}</div>
             </div>
         </div>
     );
