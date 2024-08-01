@@ -5,6 +5,8 @@ import { useDashboardStore } from "./useDashboardStore";
 import { useAuthStore } from "@/stores/useAuthStore"; // Import useAuthStore
 import Account from "../account/Account";
 import styles from './Dashboard.module.less';
+import kanye from "/kanye.png";
+import NavigationDiv from "@/components/NavigationDiv";
 
 const Dashboard: React.FC = () => {
   const { userData, loading, error, refreshUserData } = useDashboardStore();
@@ -16,6 +18,10 @@ const Dashboard: React.FC = () => {
       checkAndRedirectIfNoAccounts(userData);
     }
   }, [userData, checkAndRedirectIfNoAccounts]);
+
+  const handleKanyeClick = () => {
+    navigate("/kanye-quote");
+  }
 
 
   if (loading) {
@@ -36,9 +42,8 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <div>
-      <button onClick={refreshUserData} className={styles.button}>Refresh Data</button>
-      <Link to="/kanye-quote" className={styles.button}>Quote Generator</Link>
+    <div className={styles.dashboardContainer}>
+      <NavigationDiv width="20%" image={kanye} hoverText="Quotes by Kanye West are brought into real life pictures!" onClick={handleKanyeClick} />
     </div>
   );
 };

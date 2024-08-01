@@ -1,6 +1,6 @@
 // src/components/Header.tsx
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import styles from './Header.module.less';
 
@@ -10,14 +10,14 @@ const Header: React.FC = () => {
   return (
     <header className={styles.header}>
       <div className={styles.container}>
-        <Link to="/" className={styles.logo}>MyApp</Link>
+        <NavLink to="/" className={styles.logo}>MyApp</NavLink>
         <nav className={styles.nav}>
           {activeAccount ? (
             <>
               <span className={styles.activeAccount}>
                 {activeAccount ? activeAccount.name : 'No active account'}
               </span>
-              <Link to="/account-management" className={styles.navLink}>Accounts</Link>
+              <NavLink to="/account-management" className={styles.navLink}>Accounts</NavLink>
               <button onClick={handleLogout} className={styles.logoutButton}>Logout</button>
             </>
           ) : (

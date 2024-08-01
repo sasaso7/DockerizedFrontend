@@ -1,23 +1,22 @@
 @import "../styles/variables.less";
 
 .loadingWrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  .circle {
-    position: relative;
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    animation: rotate 2.5s linear infinite;
-    box-shadow: 0px 5px 5px 3px @secondary-color;
-  }
+.circle {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  animation: rotate 2.5s linear infinite;
+  box-shadow: 0px 5px 5px 3px @primary-color;
+}
 
-  @keyframes rotate {
-    to {
-      transform: rotate(360deg);
-    }
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
   }
+}

@@ -7,7 +7,7 @@ interface PollinationImageGenrProps {
 }
 
 const PollinationImageGen: React.FC<PollinationImageGenrProps> = ({ quote }) => {
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [progress, setProgress] = useState(0);
     const [error, setError] = useState<string | null>(null);
     const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -67,22 +67,35 @@ const PollinationImageGen: React.FC<PollinationImageGenrProps> = ({ quote }) => 
         }
     }, [quote]);
 
+
+    //LOGIC FOR WHAT TO RETURN IN THIS COMPONENT
+    if (isLoading) {
+        return (
+            <div className={styles.flexContainer}>
+                {isLoading && (
+                    <div className={styles.loadingContainer}>
+                        <p>Generating image...</p>
+                        <Loading />
+                    </div>
+                )}
+            </div>
+        )
+    }
+
+    if (error) {
+        return (
+            <p>Error: {error}</p>
+        )
+    }
+
     return (
-        <div className={styles.flexContainer}>
-            {isLoading && (
-                <div>
-                    <p>Generating image...</p>
-                    <Loading />
-                </div>
-            )}
-            {error && <p>Error: {error}</p>}
+        <>
             {imageUrl && (
                 <>
-                    <div className={styles.quote}>{quote}</div>
                     <img className={styles.image} src={imageUrl} alt="Generated from quote" style={{ maxWidth: '100%' }} />
                 </>
             )}
-        </div>
+        </>
     );
 };
 

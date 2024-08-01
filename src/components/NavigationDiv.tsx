@@ -1,0 +1,46 @@
+import React, { useState, useRef, useEffect } from 'react';
+import styles from './NavigationDiv.module.less';
+
+interface NavigationDivProps {
+    onClick: () => void;
+    image: string;
+    hoverText: string;
+    width: string;
+}
+
+const NavigationDiv = (props: NavigationDivProps) => {
+    const [isHovered, setIsHovered] = useState(false);
+    const divRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const updateHeight = () => {
+            if (divRef.current) {
+                const width = divRef.current.offsetWidth;
+                divRef.current.style.height = `${width}px`;
+            }
+        };
+
+        updateHeight();
+        window.addEventListener('resize', updateHeight);
+
+        return () => window.removeEventListener('resize', updateHeight);
+    }, []);
+
+    return (
+        <div
+            ref={divRef}
+            style={{ width: props.width }}
+            className={styles.navigationDiv}
+            onClick={props.onClick}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+        >
+            <img src={props.image} alt="Image" />
+            <div className={`${styles.hoverText} ${isHovered ? styles.show : ''}`}>
+                {props.hoverText}
+            </div>
+        </div>
+    );
+};
+
+export default NavigationDiv;

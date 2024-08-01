@@ -1,12 +1,14 @@
-.layout {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background-color: black;
-  }
+@import "../styles/variables.less";
 
-  .main {
-    flex: 1;
-    padding: 20px;
-    z-index: 1;
-  }
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: black;
+}
+
+.main {
+  flex: 1;
+  padding: @spacing-lg;
+  z-index: 1;
+}
