@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useRequest } from "ahooks";
 import { login, register, logout } from "@/services/api/api";
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 export const useAuthStore = () => {
@@ -11,27 +11,40 @@ export const useAuthStore = () => {
   const [loginError, setLoginError] = useState<string | null>(null);
   const [registerError, setRegisterError] = useState<string | null>(null);
 
-  const { activeAccount, handleLogout, checkAndRedirectIfNoAccounts } = useAuth();
+  const {
+    activeAccount,
+    handleLogout,
+    checkAndRedirectIfNoAccounts,
+    isLoggedIn,
+    setIsLoggedIn,
+  } = useAuth();
   const navigate = useNavigate();
 
   const loginRequest = useRequest(login, {
     manual: true,
-    onSuccess: () => {
+    onSuccess: (response) => {
       setLoginError(null);
+      setIsLoggedIn(true); // Set isLoggedIn to true on successful login
       navigate("/dashboard");
     },
     onError: (error) => {
       setLoginError(error.message || "Login failed. Please try again.");
+      setIsLoggedIn(false); // Ensure isLoggedIn is false on login failure
     },
   });
+
   const registerRequest = useRequest(register, {
     manual: true,
-    onSuccess: () => {
+    onSuccess: (response) => {
       setRegisterError(null);
+      setIsLoggedIn(true); // Set isLoggedIn to true on successful registration
       navigate("/dashboard");
     },
     onError: (error) => {
-      setRegisterError(error.message || "Registration failed. Please try again.");
+      setRegisterError(
+        error.message || "Registration failed. Please try again."
+      );
+      setIsLoggedIn(false); // Ensure isLoggedIn is false on registration failure
     },
   });
 
@@ -61,5 +74,7 @@ export const useAuthStore = () => {
     setRegisterError,
     activeAccount,
     checkAndRedirectIfNoAccounts,
+    isLoggedIn,
+    setIsLoggedIn,
   };
 };

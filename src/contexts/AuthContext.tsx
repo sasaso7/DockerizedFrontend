@@ -9,6 +9,8 @@ interface AuthContextType {
   setActiveAccount: (account: Account | null) => void;
   handleLogout: () => void;
   checkAndRedirectIfNoAccounts: (userData: any) => void;
+  setIsLoggedIn: (account: boolean) => void;
+  isLoggedIn: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -29,6 +31,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return savedAccount ? JSON.parse(savedAccount) : null;
   });
 
+  // Add this new state
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
+    return localStorage.getItem('isLoggedIn') === 'true';
+  });
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,9 +46,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [activeAccount]);
 
+  // Add this new effect
+  useEffect(() => {
+    localStorage.setItem('isLoggedIn', isLoggedIn.toString());
+  }, [isLoggedIn]);
+
   const handleLogout = useCallback(async () => {
     setActiveAccount(null);
+    setIsLoggedIn(false);  // Add this line
     localStorage.removeItem(ACTIVE_ACCOUNT_KEY);
+    localStorage.removeItem('isLoggedIn');  // Add this line
     navigate("/login");
     await logout();
   }, [navigate]);
@@ -60,6 +74,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setActiveAccount(userData.accounts[0]);
         }
       }
+      setIsLoggedIn(true);  // Add this line
     },
     [navigate, activeAccount, setActiveAccount]
   );
@@ -67,9 +82,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const value = {
     activeAccount,
     setActiveAccount,
+    isLoggedIn,
+    setIsLoggedIn,
     handleLogout,
     checkAndRedirectIfNoAccounts,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
+
+export default AuthContext;

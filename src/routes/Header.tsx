@@ -1,18 +1,19 @@
-// src/components/Header.tsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import styles from './Header.module.less';
+import { House } from 'lucide-react';
+import { isLoggedIn } from '@/services/api/api';
 
 const Header: React.FC = () => {
-  const { activeAccount, handleLogout } = useAuth();
+  const { activeAccount, handleLogout, isLoggedIn } = useAuth();
 
   return (
     <header className={styles.header}>
       <div className={styles.container}>
-        <NavLink to="/" className={styles.logo}>MyApp</NavLink>
+        <NavLink to="/" className={styles.logo}><House /></NavLink>
         <nav className={styles.nav}>
-          {activeAccount ? (
+          {isLoggedIn ? (
             <>
               <span className={styles.activeAccount}>
                 {activeAccount ? activeAccount.name : 'No active account'}

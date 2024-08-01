@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import { Login } from "@/pages/auth/Login";
 import { Register } from "@/pages/auth/Register";
@@ -8,21 +8,17 @@ import Layout from "./Layout";
 import { withAuth } from "@/services/withAuth";
 import { isLoggedIn } from "@/services/api/api";
 import KanyeQuotePage from "@/pages/action-pages/KanyeQuotePage";
+import { useAuth } from "../contexts/AuthContext";
 
 const ProtectedDashboard = withAuth(Dashboard);
 const ProtectedAccountManagement = withAuth(AccountManagement);
 
 export const Router = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { isLoggedIn } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const loggedIn = await isLoggedIn();
-      setIsAuthenticated(loggedIn);
-      setIsLoading(false);
-    };
-    checkAuth();
+    setIsLoading(false);
   }, []);
 
   if (isLoading) {
@@ -34,9 +30,9 @@ export const Router = () => {
       <Routes>
         <Route
           path="/"
-          element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login />}
+          element={isLoggedIn ? <Navigate to="/dashboard" replace /> : <Login />}
         />
-        <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login />} />
+        <Route path="/login" element={isLoggedIn ? <Navigate to="/dashboard" replace /> : <Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<ProtectedDashboard />} />
         <Route path="/account-management" element={<ProtectedAccountManagement />} />

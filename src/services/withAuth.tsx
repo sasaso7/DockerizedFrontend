@@ -1,6 +1,6 @@
-import React from 'react';
+import { useAuth } from '@/contexts/AuthContext';
+import { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
-import { isLoggedIn } from './api/api';
 
 // Define a type for the props of the wrapped component
 type WrappedComponentProps = {
@@ -10,29 +10,13 @@ type WrappedComponentProps = {
 export const withAuth = <P extends WrappedComponentProps>(
   WrappedComponent: React.ComponentType<P>
 ) => {
-  return class extends React.Component<P, { isAuthenticated: boolean; isLoading: boolean }> {
-    state = {
-      isAuthenticated: false,
-      isLoading: true,
-    };
+  return (props: P) => {
+    const { isLoggedIn } = useAuth();
 
-    async componentDidMount() {
-      const loggedIn = await isLoggedIn();
-      this.setState({ isAuthenticated: loggedIn, isLoading: false });
+    if (!isLoggedIn) {
+      return <Navigate to="/" replace />;
     }
 
-    render() {
-      const { isAuthenticated, isLoading } = this.state;
-
-      if (isLoading) {
-        return <div>Loading...</div>; // Or your custom loading component
-      }
-
-      if (!isAuthenticated) {
-        return <Navigate to="/" replace />;
-      }
-
-      return <WrappedComponent {...this.props} />;
-    }
+    return <WrappedComponent {...props} />;
   };
 };

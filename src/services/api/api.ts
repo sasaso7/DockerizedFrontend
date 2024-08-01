@@ -28,7 +28,7 @@ api.interceptors.request.use(
             console.log("Token expired, refreshing...");
             const newToken = await refreshToken();
             isRefreshing = false;
-            refreshSubscribers.forEach(callback => callback(newToken));
+            refreshSubscribers.forEach((callback) => callback(newToken));
             refreshSubscribers = [];
             config.headers["Authorization"] = `Bearer ${newToken}`;
           } catch (error) {
@@ -126,14 +126,15 @@ const getCachedData = async (key: string) => {
 };
 
 const clearCache = async () => {
-  const keys = await loadString(CACHE_PREFIX);
-  if (keys) {
-    const cacheKeys = JSON.parse(keys);
-    for (const key of cacheKeys) {
-      await remove(`${CACHE_PREFIX}${key}`);
+  return new Promise<void>((resolve) => {
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith(CACHE_PREFIX)) {
+        localStorage.removeItem(key);
+      }
     }
-  }
-  await remove(CACHE_PREFIX);
+    resolve();
+  });
 };
 /* CACHE OPERATIONS END */
 
@@ -204,7 +205,6 @@ export const register = async (
   }
 };
 
-
 const refreshToken = async (): Promise<string> => {
   try {
     console.log("Refreshing token");
@@ -213,7 +213,9 @@ const refreshToken = async (): Promise<string> => {
       throw new Error("No refresh token available");
     }
 
-    const response = await api.post<types.LoginResult>("/refresh", { refreshToken });
+    const response = await api.post<types.LoginResult>("/refresh", {
+      refreshToken,
+    });
 
     if (!response || !response.data) {
       throw new Error("Invalid response from server");

@@ -12,11 +12,9 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
     return (
         <div className={styles.layout}>
-            <AuthProvider>
-                <Header />
-                <main className={styles.main}>{children}</main>
-                {/* <AnimatedBackground /> */}
-            </AuthProvider>
+            <Header />
+            <main className={styles.main}>{children}</main>
+            {/* <AnimatedBackground /> */}
         </div>
     );
 };
