@@ -45,7 +45,7 @@ const KanyeQuotePage: React.FC = () => {
             {quote && (
                 <div className={styles.flexAndCenter}>
                     <div className={styles.quote}>{quote}</div>
-                    <PollinationImageGen quote={"Kanye West says: " + quote} />
+                    <PollinationImageGen quote={"Kanye West says " + quote} />
                 </div>
             )}
         </div>
