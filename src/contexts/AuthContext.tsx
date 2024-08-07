@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { Account } from "@/services/api/api.types";
 import { useNavigate } from "react-router-dom";
-import { logout } from '@/services/api/api';
+import { setLogoutHandler } from '@/utils/authUtils';
 
 interface AuthContextType {
   activeAccount: Account | null;
@@ -53,12 +53,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const handleLogout = useCallback(async () => {
     setActiveAccount(null);
-    setIsLoggedIn(false);  // Add this line
+    setIsLoggedIn(false);
     localStorage.removeItem(ACTIVE_ACCOUNT_KEY);
-    localStorage.removeItem('isLoggedIn');  // Add this line
+    localStorage.removeItem('isLoggedIn');
     navigate("/login");
-    await logout();
   }, [navigate]);
+
+  useEffect(() => {
+    setLogoutHandler(handleLogout);
+  }, [handleLogout]);
 
   const checkAndRedirectIfNoAccounts = useCallback(
     (userData: any) => {

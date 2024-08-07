@@ -5,8 +5,9 @@ import { useDashboardStore } from "./useDashboardStore";
 import { useAuthStore } from "@/stores/useAuthStore"; // Import useAuthStore
 import Account from "../account/Account";
 import styles from './Dashboard.module.less';
-import kanye from "/kanye.png";
+import Kanye from "/kanye.svg";
 import NavigationDiv from "@/components/NavigationDiv";
+import { BadgeHelp } from "lucide-react";
 
 const Dashboard: React.FC = () => {
   const { userData, loading, error, refreshUserData } = useDashboardStore();
@@ -22,10 +23,14 @@ const Dashboard: React.FC = () => {
   const handleKanyeClick = () => {
     navigate("/kanye-quote");
   }
+  const handleFactClick = () => {
+    navigate("/random-fact");
+  }
+
 
 
   if (loading) {
-    return <div>Loading... DASHBOARD</div>;
+    return <div>Loading...</div>;
   }
 
   if (error) {
@@ -43,7 +48,8 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className={styles.dashboardContainer}>
-      <NavigationDiv width="20%" image={kanye} hoverText="Quotes by Kanye West are brought into real life pictures!" onClick={handleKanyeClick} />
+      <NavigationDiv width="15%" image={Kanye} hoverText="Quotes by Kanye West are brought into real life pictures!" onClick={handleKanyeClick} />
+      <NavigationDiv width="15%" image={BadgeHelp} hoverText="Expand your knowledge with random facts" onClick={handleFactClick} />
     </div>
   );
 };

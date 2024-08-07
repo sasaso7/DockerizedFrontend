@@ -6,8 +6,8 @@
   cursor: pointer;
   background: linear-gradient(
     180deg,
-    @secondary-color 0%,
-    @secondary-complimentary 100%
+    @primary-color 0%,
+    @primary-complimentary 100%
   );
   border: none;
   border-radius: 4px;
@@ -17,6 +17,10 @@
     width: 50%;
     height: auto;
     object-fit: contain;
+  }
+  svg {
+    width: 50%;
+    height: 50%;
   }
 
   .hoverText {
@@ -44,10 +48,11 @@
   .arrow {
     background: linear-gradient(
       180deg,
-      @secondary-color 0%,
-      @secondary-complimentary 100%
+      @primary-color 0%,
+      @primary-complimentary 100%
     );
     border-radius: 100%;
+    opacity: 1;
     svg {
       width: 100%;
       min-height: 60px;

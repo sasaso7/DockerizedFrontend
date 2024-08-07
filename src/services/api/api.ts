@@ -1,6 +1,9 @@
 import axios, { AxiosInstance } from "axios";
 import * as types from "./api.types";
 import { loadString, remove, saveString } from "@/utils/storage";
+import { useNavigate } from "react-router-dom";
+import { getLogoutHandler } from "@/utils/authUtils";
+import { RandomFactResponse } from "./api.types";
 
 const CACHE_PREFIX = "api_cache_";
 const CACHE_EXPIRATION = 5 * 60 * 1000; // 5 minutes in milliseconds
@@ -34,6 +37,9 @@ api.interceptors.request.use(
           } catch (error) {
             isRefreshing = false;
             refreshSubscribers = [];
+
+            const logout = getLogoutHandler();
+            await logout(); // Force logout on refresh failure
             return Promise.reject(error);
           }
         } else {
@@ -69,18 +75,38 @@ api.interceptors.response.use(
     if (
       error.response &&
       error.response.status === 401 &&
-      !originalRequest._retry
+      !originalRequest._retry &&
+      originalRequest.url !== "/refresh" // Add this condition
     ) {
       originalRequest._retry = true;
-      try {
-        const newToken = await refreshToken();
-        originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
-        return api(originalRequest);
-      } catch (refreshError) {
-        // If refresh fails, reject with your custom error format
-        return Promise.reject({
-          title: "Authentication Error",
-          detail: "Failed to refresh authentication token",
+      if (!isRefreshing) {
+        isRefreshing = true;
+        try {
+          const newToken = await refreshToken();
+          isRefreshing = false;
+          refreshSubscribers.forEach((callback) => callback(newToken));
+          refreshSubscribers = [];
+          originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
+          return api(originalRequest);
+        } catch (refreshError) {
+          isRefreshing = false;
+          refreshSubscribers = [];
+
+          const logout = getLogoutHandler();
+          await logout(); // Force logout on refresh failure
+
+          return Promise.reject({
+            title: "Authentication Error",
+            detail: "Failed to refresh authentication token",
+          });
+        }
+      } else {
+        // Wait for the token to be refreshed
+        return new Promise((resolve, reject) => {
+          refreshSubscribers.push((token) => {
+            originalRequest.headers["Authorization"] = `Bearer ${token}`;
+            resolve(api(originalRequest));
+          });
         });
       }
     }
@@ -178,13 +204,6 @@ export const login = async (
     console.error("Login error:", error);
     throw error;
   }
-};
-
-export const logout = async () => {
-  await remove("accessToken");
-  await remove("refreshToken");
-  await remove("tokenExpiry");
-  await clearCache();
 };
 
 export const register = async (
@@ -372,3 +391,20 @@ export const getKanyeQuoteAndCreateActivity = async (
     throw error;
   }
 };
+
+export const getRandomFactAndCreateActivity = async (
+  params: types.RandomFactRequest
+): Promise<RandomFactResponse> => {
+  try {
+    const response = await api.post<RandomFactResponse>(
+      "/ExternalAPI/randomfact",
+      params
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching random fact and creating activity:", error);
+    throw error;
+  }
+};
+/* EXTERNAL API OPERATIONS END */

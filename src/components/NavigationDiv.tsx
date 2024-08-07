@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styles from './NavigationDiv.module.less';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, LucideIcon } from 'lucide-react';
 
 interface NavigationDivProps {
     onClick: () => void;
-    image: string;
+    image: string | LucideIcon;
     hoverText: string;
     width: string;
 }
@@ -20,10 +20,8 @@ const NavigationDiv = (props: NavigationDivProps) => {
                 divRef.current.style.height = `${width}px`;
             }
         };
-
         updateHeight();
         window.addEventListener('resize', updateHeight);
-
         return () => window.removeEventListener('resize', updateHeight);
     }, []);
 
@@ -36,7 +34,11 @@ const NavigationDiv = (props: NavigationDivProps) => {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            <img src={props.image} alt="Image" />
+            {typeof props.image === 'string' ? (
+                <img src={props.image} alt="Image" />
+            ) : (
+                <props.image />
+            )}
             <div className={`${styles.hoverText} ${isHovered ? styles.show : ''}`}>
                 <div className={styles.arrow}><ArrowRight /></div>
                 <div className={styles.text}>{props.hoverText}</div>

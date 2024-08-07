@@ -96,3 +96,12 @@ export type CreateActivity = {
 export interface KanyeQuoteRequest {
   accountId: string;
 }
+export interface RandomFactRequest {
+  accountId: string;
+}
+
+export interface RandomFactResponse {
+  fact: string;
+  origin: string;
+  originURL: string;
+}

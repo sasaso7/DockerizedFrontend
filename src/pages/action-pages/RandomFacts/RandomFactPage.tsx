@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { getKanyeQuoteAndCreateActivity } from '@/services/api/api';
+import { getKanyeQuoteAndCreateActivity, getRandomFactAndCreateActivity } from '@/services/api/api';
 import PollinationImageGen from '@/components/PollinationImageGen';
-import styles from "./ActionPages.module.less";
+import styles from "../ActionPages.module.less";
 
-const KanyeQuotePage: React.FC = () => {
+const RandomFactPage: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [quote, setQuote] = useState<string | null>(null);
@@ -16,8 +16,8 @@ const KanyeQuotePage: React.FC = () => {
         setLoading(true);
         setError(null);
         try {
-            const result = await getKanyeQuoteAndCreateActivity({ accountId: activeAccount!.id });
-            setQuote(result);
+            const result = await getRandomFactAndCreateActivity({ accountId: activeAccount!.id });
+            setQuote(result.fact);
         } catch (err) {
             setError('Failed to fetch quote and create activity. Please try again.');
             console.error(err);
@@ -28,7 +28,6 @@ const KanyeQuotePage: React.FC = () => {
 
     useEffect(() => {
         if (effectRan.current === false) {
-            console.log("I RUN");
             fetchQuote();
             effectRan.current = true;
         }
@@ -45,11 +44,11 @@ const KanyeQuotePage: React.FC = () => {
             {quote && (
                 <div className={styles.flexAndCenter}>
                     <div className={styles.quote}>{quote}</div>
-                    <PollinationImageGen quote={"Kanye West says " + quote} />
+                    <PollinationImageGen quote={quote} />
                 </div>
             )}
         </div>
     );
 };
 
-export default KanyeQuotePage;
+export default RandomFactPage;
