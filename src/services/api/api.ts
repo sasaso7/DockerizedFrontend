@@ -102,7 +102,7 @@ api.interceptors.response.use(
         }
       } else {
         // Wait for the token to be refreshed
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
           refreshSubscribers.push((token) => {
             originalRequest.headers["Authorization"] = `Bearer ${token}`;
             resolve(api(originalRequest));

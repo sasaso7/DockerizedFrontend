@@ -1,7 +1,7 @@
 // src/stores/useAuthStore.ts
 import { useState } from "react";
 import { useRequest } from "ahooks";
-import { login, register, logout } from "@/services/api/api";
+import { login, register } from "@/services/api/api";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
@@ -22,7 +22,7 @@ export const useAuthStore = () => {
 
   const loginRequest = useRequest(login, {
     manual: true,
-    onSuccess: (response) => {
+    onSuccess: () => {
       setLoginError(null);
       setIsLoggedIn(true); // Set isLoggedIn to true on successful login
       navigate("/dashboard");
@@ -35,7 +35,7 @@ export const useAuthStore = () => {
 
   const registerRequest = useRequest(register, {
     manual: true,
-    onSuccess: (response) => {
+    onSuccess: () => {
       setRegisterError(null);
       setIsLoggedIn(true); // Set isLoggedIn to true on successful registration
       navigate("/dashboard");

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import styles from './NavigationDiv.module.less';
 import { ArrowRight, LucideIcon } from 'lucide-react';
 
