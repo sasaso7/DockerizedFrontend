@@ -1,9 +1,17 @@
 # Build stage
-FROM node:14 as build
+FROM node:18 AS build
 WORKDIR /app
-COPY package*.json ./
-RUN npm ci
+
+# Copy package.json, package-lock.json, and TypeScript config
+COPY package*.json tsconfig*.json ./
+
+# Install dependencies with verbose logging
+RUN npm ci --verbose
+
+# Copy the rest of the application code
 COPY . .
+
+# Build the application
 RUN npm run build
 
 # Production stage
