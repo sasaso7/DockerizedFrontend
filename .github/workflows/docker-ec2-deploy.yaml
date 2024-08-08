@@ -28,7 +28,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: phippedersen/DockerizedFrontend:latest
+          tags: phippedersen/dockerized-frontend:latest
   deploy:
     needs: build-and-push
     runs-on: ubuntu-latest
@@ -41,11 +41,11 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             # Pull the latest frontend image
-            docker pull phippedersen/DockerizedFrontend:latest
+            docker pull phippedersen/dockerized-frontend:latest
             # Stop and remove the existing frontend container if it exists
             docker stop frontend-container || true
             docker rm frontend-container || true
             # Run the new frontend container
-            docker run -d --name frontend-container -p 80:80 phippedersen/DockerizedFrontend:latest
+            docker run -d --name frontend-container -p 80:80 phippedersen/dockerized-frontend:latest
             # Clean up unused images
             docker image prune -f
