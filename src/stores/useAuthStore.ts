@@ -23,7 +23,6 @@ export const useAuthStore = () => {
   const loginRequest = useRequest(login, {
     manual: true,
     onSuccess: () => {
-      setLoginError(null);
       setIsLoggedIn(true); // Set isLoggedIn to true on successful login
       navigate("/dashboard");
     },
