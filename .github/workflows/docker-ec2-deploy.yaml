@@ -42,34 +42,10 @@ jobs:
           script: |
             # Pull the latest frontend image
             docker pull phippedersen/dockerized-frontend:latest
-
-            # Create the traefik network if it doesn't exist
-            docker network create traefik-net || true
-
-            # Create or update the docker-compose file
-            cat > docker-compose.frontend.yml << EOL
-            version: '3.9'
-            services:
-              frontend:
-                image: phippedersen/dockerized-frontend:latest
-                container_name: frontend-container
-                networks:
-                  - traefik-net
-                labels:
-                  - "traefik.enable=true"
-                  - "traefik.http.routers.frontend.rule=PathPrefix(\`/\`)"
-                  - "traefik.http.services.frontend.loadbalancer.server.port=80"
-
-            networks:
-              traefik-net:
-                external: true
-            EOL
-
             # Stop and remove the existing frontend container if it exists
-            docker-compose -f docker-compose.frontend.yml down
-
-            # Start the new frontend container
-            docker-compose -f docker-compose.frontend.yml up -d
-
+            docker stop frontend-container || true
+            docker rm frontend-container || true
+            # Run the new frontend container
+            docker run -d --name frontend-container -p 80:80 phippedersen/dockerized-frontend:latest
             # Clean up unused images
             docker image prune -f
