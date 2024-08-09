@@ -42,10 +42,15 @@ jobs:
           script: |
             # Pull the latest frontend image
             docker pull phippedersen/dockerized-frontend:latest
+
+            # Create the traefik network if it doesn't exist
+            docker network create traefik-net || true
+
             # Stop and remove the existing frontend container if it exists
-            docker stop frontend-container || true
-            docker rm frontend-container || true
-            # Run the new frontend container
-            docker run -d --name frontend-container -p 80:80 phippedersen/dockerized-frontend:latest
+            docker-compose -f docker-compose.frontend.yml down
+
+            # Start the new frontend container
+            docker-compose -f docker-compose.frontend.yml up -d
+
             # Clean up unused images
             docker image prune -f
