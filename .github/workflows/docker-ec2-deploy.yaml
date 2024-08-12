@@ -51,6 +51,6 @@ jobs:
             docker stop frontend-container || true
             docker rm frontend-container || true
             # Run the new frontend container
-            docker run -d --name frontend-container --network ec2-user_app-network -p 80:80 phippedersen/dockerized-frontend:latest
+            docker run -d --name frontend-container --network ec2-user_app-network -p 3000:80 phippedersen/dockerized-frontend:latest
             # Clean up unused images
             docker image prune -f
