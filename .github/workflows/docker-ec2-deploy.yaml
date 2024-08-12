@@ -46,6 +46,6 @@ jobs:
             docker stop frontend-container || true
             docker rm frontend-container || true
             # Run the new frontend container
-            docker run -d --name frontend-container -p 80:80 phippedersen/dockerized-frontend:latest
+            docker run -d --name frontend-container -p 3000:80 phippedersen/dockerized-frontend:latest
             # Clean up unused images
             docker image prune -f
