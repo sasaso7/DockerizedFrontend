@@ -3,7 +3,6 @@ name: Frontend CI/CD Pipeline
 on:
   push:
     branches: [main]
-
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -11,38 +10,30 @@ jobs:
       VITE_API_LINK: "/api"
     steps:
       - uses: actions/checkout@v2
-
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "14"
-
+          node-version: "18"
       - name: Install dependencies
         run: npm ci
-
       - name: Create .env file
         run: |
           echo "VITE_API_LINK=${{ env.VITE_API_LINK }}" > .env
-
       - name: Build React app
         run: npm run build
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
-
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
           context: .
           push: true
-          tags: phippedersen/DockerizedFrontend:latest
-
+          tags: phippedersen/dockerized-frontend:latest
   deploy:
     needs: build-and-push
     runs-on: ubuntu-latest
@@ -54,8 +45,12 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker pull phippedersen/DockerizedFrontend:latest
+            # Pull the latest frontend image
+            docker pull phippedersen/dockerized-frontend:latest
+            # Stop and remove the existing frontend container if it exists
             docker stop frontend-container || true
             docker rm frontend-container || true
-            docker run -d --name frontend-container -p 80:80 phippedersen/DockerizedFrontend:latest
+            # Run the new frontend container
+            docker run -d --name frontend-container -p 3000:80 phippedersen/dockerized-frontend:latest
+            # Clean up unused images
             docker image prune -f
