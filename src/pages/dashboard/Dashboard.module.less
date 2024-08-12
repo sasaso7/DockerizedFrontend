@@ -13,7 +13,15 @@
 
 .dashboardContainer {
   display: flex;
-  flex-flow: row wrap;
+  flex-flow: column wrap;
   justify-content: space-around;
+  align-items: center;
   width: 100%;
+  row-gap: @spacing-lg;
+}
+
+@media (min-width: @breakpoint-sm) {
+  .dashboardContainer {
+    flex-flow: row wrap;
+  }
 }

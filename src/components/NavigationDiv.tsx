@@ -6,7 +6,6 @@ interface NavigationDivProps {
     onClick: () => void;
     image: string | LucideIcon;
     hoverText: string;
-    width: string;
 }
 
 const NavigationDiv = (props: NavigationDivProps) => {
@@ -28,7 +27,6 @@ const NavigationDiv = (props: NavigationDivProps) => {
     return (
         <div
             ref={divRef}
-            style={{ width: props.width }}
             className={styles.navigationDiv}
             onClick={props.onClick}
             onMouseEnter={() => setIsHovered(true)}

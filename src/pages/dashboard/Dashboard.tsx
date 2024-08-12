@@ -48,8 +48,8 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className={styles.dashboardContainer}>
-      <NavigationDiv width="15%" image={Kanye} hoverText="Quotes by Kanye West are brought into real life pictures!" onClick={handleKanyeClick} />
-      <NavigationDiv width="15%" image={BadgeHelp} hoverText="Expand your knowledge with random facts" onClick={handleFactClick} />
+      <NavigationDiv image={Kanye} hoverText="Quotes by Kanye West are brought into real life pictures!" onClick={handleKanyeClick} />
+      <NavigationDiv image={BadgeHelp} hoverText="Expand your knowledge with random facts" onClick={handleFactClick} />
     </div>
   );
 };

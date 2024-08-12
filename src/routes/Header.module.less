@@ -18,8 +18,9 @@
   margin: 0 auto;
   padding: 0 @spacing-md;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .logo {
@@ -27,30 +28,58 @@
   font-weight: bold;
   text-decoration: none;
   color: @text-color;
-  margin-bottom: @spacing-sm;
 }
 
 .nav {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
 }
 
 .navLink,
 .logoutButton {
-  margin-right: @spacing-md;
-  margin-top: @spacing-xs;
   text-decoration: none;
   color: @text-color;
   font-size: @font-size-base;
+  text-align: center;
   .button-style;
 }
 
 .activeAccount {
-  font-size: @font-size-small;
-  color: @secondary-text-color;
-  margin-right: @spacing-md;
-  margin-top: @spacing-xs;
+  text-align: center;
+  .button-style;
+  background: rgba(255, 255, 255, 0);
+  outline: 1px solid @primary-color;
+  &:hover {
+    background-color: unset;
+  }
+  cursor: unset;
+}
+
+.menuButton {
+  .button-style;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: black;
+  border-bottom: 2px solid @primary-color;
+  padding: 1rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 0;
+  row-gap: @spacing-sm;
+  align-items: stretch;
+
+  transform: translateY(-100%);
+  transition: transform 0.3s ease-in-out;
+
+  &.navOpen {
+    transform: translateY(36%); // This will position it just below the header
+  }
 }
 
 @media (min-width: @breakpoint-md) {
@@ -80,5 +109,40 @@
 
   .activeAccount {
     margin-left: 0;
+  }
+
+  .menuButton {
+    display: none; // Hide menu button on larger screens
+  }
+
+  .nav {
+    display: flex; // Always show nav on larger screens
+    flex-direction: row;
+    position: static;
+    padding: 0;
+    box-shadow: none;
+    position: static;
+    transform: none;
+    transition: none;
+    display: flex;
+    flex-direction: row;
+    background: transparent;
+    border-bottom: unset;
+
+    &.navOpen {
+      // Reset mobile-specific styles
+      position: static;
+      box-shadow: none;
+    }
+  }
+
+  .activeAccount {
+    box-shadow: unset;
+  }
+
+  .navLink,
+  .logoutButton {
+    margin-bottom: 0; // Remove bottom margin on larger screens
+    margin-left: 1rem; // Add some spacing between items
   }
 }
