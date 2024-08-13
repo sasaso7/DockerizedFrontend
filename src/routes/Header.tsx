@@ -20,7 +20,7 @@ const Header: React.FC = () => {
     <header className={styles.header}>
       <div className={styles.container}>
         <NavLink to="/" className={styles.logo} onClick={closeMenu}>
-          {isLoggedIn ? <House /> : <div className={styles.fishLogo}><FishSymbol /></div>}
+          {isLoggedIn ? <House /> : null}
         </NavLink>
         <button onClick={toggleMenu} className={styles.menuButton}>
           {isMenuOpen ? <X /> : <Menu />}

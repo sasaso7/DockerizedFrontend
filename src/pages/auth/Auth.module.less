@@ -1,20 +1,42 @@
 @import "../../styles/variables.less";
 
-.center{
-    margin: auto;
-    flex-direction: column;
-    .center-mixin
+.center {
+  margin: auto;
+  flex-direction: column;
+  .center-mixin;
 }
-.button{
-    .button-style
-}
-
-.formStyle{
-    display: flex;
-    flex-direction: column;
-    row-gap: 10px;
+.button {
+  .button-style;
 }
 
-.input{
-    .input-style
+.formStyle {
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+}
+
+.input {
+  .input-style;
+}
+
+.LoginIcon {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: @spacing-lg;
+  svg {
+    width: 50%;
+    min-height: 150px;
+    animation: rotate 20s linear infinite;
+    stroke-width: 1px;
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }

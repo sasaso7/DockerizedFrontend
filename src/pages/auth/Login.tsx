@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import styles from './Auth.module.less';
 
 import { useAuthStore } from "../../stores/useAuthStore";
+import { Radius } from "lucide-react";
 
 export const Login: React.FC = () => {
   const {
@@ -23,6 +24,9 @@ export const Login: React.FC = () => {
 
   return (
     <div className={styles.center}>
+      <div className={styles.LoginIcon}>
+        <Radius />
+      </div>
       <form onSubmit={onSubmit} className={styles.formStyle}>
         {loginError && (
           <div style={{ color: "red", marginBottom: "10px" }}>{loginError}</div>
