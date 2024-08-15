@@ -28,7 +28,7 @@ const PollinationImageGen: React.FC<PollinationImageGenrProps> = ({ quote }) => 
                 // Constructing the image URL (replace with your actual API endpoint)
                 const apiUrl = `https://pollinations.ai/p/${encodeURIComponent(quote)}&width=${width}&height=${height}&seed=${seed}`;
 
-                const response = await fetch(apiUrl);
+                // const response = await fetch(apiUrl);
 
                 // if (!response.ok) {
                 //     throw new Error('Failed to generate image');
