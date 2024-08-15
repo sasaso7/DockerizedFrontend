@@ -28,19 +28,33 @@ const PollinationImageGen: React.FC<PollinationImageGenrProps> = ({ quote }) => 
                 // Constructing the image URL (replace with your actual API endpoint)
                 const apiUrl = `https://pollinations.ai/p/${encodeURIComponent(quote)}&width=${width}&height=${height}&seed=${seed}`;
 
-                // const response = await fetch(apiUrl);
+                const response = await fetch(apiUrl);
 
-                // if (!response.ok) {
-                //     throw new Error('Failed to generate image');
-                // }
+                if (!response.ok) {
+                    throw new Error('Failed to generate image');
+                }
 
+                const reader = response.body?.getReader();
+                const contentLength = +(response.headers.get('Content-Length') ?? '0');
+                let receivedLength = 0;
                 const chunks: Uint8Array[] = [];
 
+                while (true) {
+                    const { done, value } = await reader!.read();
+
+                    if (done) {
+                        break;
+                    }
+
+                    chunks.push(value);
+                    receivedLength += value.length;
+                    setProgress(Math.round((receivedLength / contentLength) * 100));
+                }
 
                 const blob = new Blob(chunks);
                 const generatedImageUrl = URL.createObjectURL(blob);
 
-                setImageUrl(apiUrl);
+                setImageUrl(generatedImageUrl);
                 setIsLoading(false);
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'An unknown error occurred');
