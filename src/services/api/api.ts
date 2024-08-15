@@ -19,8 +19,8 @@ let refreshSubscribers: ((token: string) => void)[] = [];
 api.interceptors.request.use(
   async (config) => {
     if (await isLoggedIn()) {
-      // Don't intercept the refresh token request
-      if (config.url === "/refresh") {
+      // Don't intercept the refresh token request or login request
+      if (config.url === "/refresh" || config.url === "/login") {
         return config;
       }
 
@@ -76,7 +76,8 @@ api.interceptors.response.use(
       error.response &&
       error.response.status === 401 &&
       !originalRequest._retry &&
-      originalRequest.url !== "/refresh" // Add this condition
+      originalRequest.url !== "/refresh" &&
+      originalRequest.url !== "/login" // Add this condition
     ) {
       originalRequest._retry = true;
       if (!isRefreshing) {
@@ -130,7 +131,6 @@ api.interceptors.response.use(
     }
   }
 );
-
 /* CACHE OPERATIONS */
 const cacheData = async (key: string, data: any) => {
   const cacheItem = {
